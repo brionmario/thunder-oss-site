@@ -1,0 +1,226 @@
+/* ==========================================================================
+   WSO2 Oxygen UI — Colors & Type
+   Derived from oxygen-ui/packages/oxygen-ui/src/styles/Themes/*
+   Two primary themes live side-by-side: Acrylic (orange, WSO2/Asgardeo flagship)
+   and Choreo (indigo-violet, for the Choreo product). Toggle by adding
+   data-theme="choreo" or data-color-scheme="dark" on <html> or a wrapper.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Local Inter variable font (opsz + wght axes) */
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-VariableFont_opsz_wght.ttf') format('truetype-variations'),
+       url('fonts/Inter-VariableFont_opsz_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ---------- Type: Inter Variable (Oxygen UI default) --------------------- */
+  --font-sans: 'Inter', 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Base: 14px (Oxygen UI defaults; Material-UI v7 base) */
+  --font-size-base: 14px;
+
+  /* Type scale — from OxygenThemeBase (base + offset / rem) */
+  --fs-h1: 2rem;       /* 28 / 14 = 2rem  (base + 14) */
+  --fs-h2: 1.714rem;   /* 24 */
+  --fs-h3: 1.571rem;   /* 22 */
+  --fs-h4: 1.428rem;   /* 20 */
+  --fs-h5: 1.142rem;   /* 16 */
+  --fs-h6: 1rem;       /* 14 */
+  --fs-subtitle1: 1.285rem; /* 18 */
+  --fs-subtitle2: 1rem;
+  --fs-body1: 1rem;     /* 14 */
+  --fs-body2: 0.928rem; /* 13 — used by labels */
+  --fs-button: 1rem;
+  --fs-caption: 0.785rem; /* 11 */
+
+  /* Weights — Oxygen UI keeps headings LIGHT (400); only h6 & button are 500 */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --lh-tight: 1.2;
+  --lh-snug: 1.4;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.65;
+
+  /* ---------- Acrylic (WSO2 / Asgardeo) light palette — the default -------- */
+  --orange-primary: #fa7b3f;          /* Acrylic primary */
+  --orange-primary-dark: #ef4223;     /* gradient end */
+  --orange-primary-start: #f47b20;    /* gradient start */
+  --orange-flat: #ff7300;             /* Classic theme primary */
+
+  /* WSO2 brand gradient (Oxygen primary) */
+  --gradient-primary: linear-gradient(90deg, #F47B20 0%, #EF4223 100%);
+  --gradient-primary-diagonal: linear-gradient(135deg, #e74420 0%, #fa7b3f 100%);
+
+  /* Neutrals */
+  --text-primary: #40404B;
+  --text-secondary: #40404B;
+  --text-muted: #9ca3af;
+  --divider: rgba(0, 0, 0, 0.072);
+  --secondary: #e8e8e8;
+
+  /* Surfaces — acrylic uses translucent paper over a soft-gray base */
+  --bg-default: #f5f5f5;
+  --bg-paper: rgba(255, 255, 255, 0.772);
+  --bg-acrylic: rgba(255, 255, 255, 0.251);
+
+  /* Semantic */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #5567d5;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;          /* Acrylic default shape.borderRadius */
+  --radius-lg: 16px;
+  --radius-pill: 20px;        /* button pill */
+  --radius-round: 9999px;
+
+  /* Blur (glass-morphism tokens) */
+  --blur-light: blur(3px);
+  --blur-medium: blur(10px);
+  --blur-heavy: blur(20px);
+
+  /* Shadows — Oxygen disables MUI shadows by default; use subtle custom ones */
+  --shadow-0: none;
+  --shadow-paper: 0 0 1px rgba(141,145,163,0.4), 0 1px 2px rgba(203,206,219,0.3);
+  --shadow-popover: 0 8px 24px rgba(16, 16, 24, 0.12);
+  --shadow-focus: 0 0 0 3px rgba(250, 123, 63, 0.25);
+
+  /* Spacing (MUI-style 8px base) */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Border */
+  --border-width: 1px;
+  --border-style: solid;
+
+  /* Action (MUI action system) */
+  --action-hover: rgba(0, 0, 0, 0.04);
+  --action-selected: rgba(0, 0, 0, 0.08);
+  --action-active: rgba(64, 64, 75, 0.56);
+  --action-focus: rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- Dark (Acrylic) ------------------------------------------------- */
+[data-color-scheme="dark"] {
+  --text-primary: #efefef;
+  --text-secondary: #D0D3E2;
+  --text-muted: #6b7280;
+  --divider: rgba(255, 255, 255, 0.086);
+  --secondary: #3c3c3c;
+
+  --bg-default: #000000;
+  --bg-paper: rgba(0, 0, 0, 0.772);
+  --bg-acrylic: rgba(0, 0, 0, 0.251);
+
+  --orange-primary: #F87643;
+  --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  --action-hover: rgba(255, 255, 255, 0.08);
+  --action-selected: rgba(255, 255, 255, 0.16);
+  --action-focus: rgba(255, 255, 255, 0.2);
+}
+
+/* ---------- Choreo palette (indigo-violet gradient product theme) ---------- */
+[data-theme="choreo"] {
+  --orange-primary: #5567d5;                 /* override primary to Choreo indigo */
+  --orange-primary-dark: #3d4db0;
+  --orange-primary-start: #4a5bc8;
+  --gradient-primary: linear-gradient(77.74deg, #4a5bc8 11.16%, #745bcc 99.55%);
+  --gradient-primary-diagonal: linear-gradient(135deg, #4a5bc8 0%, #745bcc 100%);
+
+  --bg-default: #f7f8fb;
+  --bg-paper: #ffffff;
+  --bg-acrylic: #ffffff;
+
+  --text-primary: #1d2028;
+  --text-secondary: #4a4a5a;
+  --text-muted: #9ca3af;
+  --divider: #e6e7ec;
+  --secondary: #8d91a3;
+
+  --radius-md: 8px;
+
+  --action-hover: rgba(85, 103, 213, 0.08);
+  --action-selected: rgba(85, 103, 213, 0.16);
+  --action-active: rgba(85, 103, 213, 0.56);
+  --action-focus: rgba(85, 103, 213, 0.24);
+  --shadow-paper: 0 0 1px rgba(141,145,163,0.4), 0 1px 2px rgba(203,206,219,0.3);
+}
+
+[data-theme="choreo"][data-color-scheme="dark"] {
+  --orange-primary: #6b7de0;
+  --bg-default: #0d0d14;
+  --bg-paper: #1a1a24;
+  --bg-acrylic: #1a1a24;
+  --text-primary: #efefef;
+  --text-secondary: #d0d3e2;
+  --divider: rgba(255,255,255,0.086);
+}
+
+/* ==========================================================================
+   Semantic element defaults — apply styles directly to tags so HTML "just works"
+   ========================================================================== */
+
+html, body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  background: var(--bg-default);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .h1 { font-size: var(--fs-h1); font-weight: var(--fw-regular); line-height: var(--lh-tight); margin: 0 0 var(--space-4); letter-spacing: -0.01em; }
+h2, .h2 { font-size: var(--fs-h2); font-weight: var(--fw-regular); line-height: var(--lh-tight); margin: 0 0 var(--space-3); }
+h3, .h3 { font-size: var(--fs-h3); font-weight: var(--fw-regular); line-height: var(--lh-snug); margin: 0 0 var(--space-3); }
+h4, .h4 { font-size: var(--fs-h4); font-weight: var(--fw-regular); line-height: var(--lh-snug); margin: 0 0 var(--space-2); }
+h5, .h5 { font-size: var(--fs-h5); font-weight: var(--fw-regular); line-height: var(--lh-snug); margin: 0 0 var(--space-2); }
+h6, .h6 { font-size: var(--fs-h6); font-weight: var(--fw-medium); line-height: var(--lh-snug); margin: 0 0 var(--space-2); }
+
+p, .body1 { font-size: var(--fs-body1); line-height: var(--lh-normal); margin: 0 0 var(--space-3); }
+.body2 { font-size: var(--fs-body2); line-height: var(--lh-normal); }
+.subtitle1 { font-size: var(--fs-subtitle1); font-weight: var(--fw-regular); }
+.subtitle2 { font-size: var(--fs-subtitle2); font-weight: var(--fw-regular); color: var(--text-secondary); }
+.caption { font-size: var(--fs-caption); color: var(--text-secondary); }
+
+a { color: var(--orange-primary); text-decoration: none; }
+a:hover { color: var(--orange-primary-dark); text-decoration: underline; }
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+code {
+  background: var(--action-hover);
+  padding: 0.15em 0.35em;
+  border-radius: var(--radius-xs);
+}
+
+hr { border: 0; border-top: var(--border-width) var(--border-style) var(--divider); margin: var(--space-5) 0; }
+
+/* Focus ring consistent with Oxygen UI buttons */
+:focus-visible {
+  outline: 2px solid var(--orange-primary);
+  outline-offset: 2px;
+}

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Thunder — Identity for humans, services, and agents</title>
+<link rel="stylesheet" href="thunder.css"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body class="thunder" data-screen-label="Thunder — Home">
+
+<div id="root"></div>
+
+<script type="text/babel" src="thunder-brand.jsx"></script>
+<script type="text/babel" src="thunder-hero.jsx"></script>
+<script type="text/babel" src="thunder-sections.jsx"></script>
+
+<script type="text/babel">
+// Tweakable defaults (read/written by host)
+const TWEAKS = /*EDITMODE-BEGIN*/{
+  "primaryColor": "#10996b",
+  "accentColor": "#7af0b8",
+  "density": "comfy",
+  "showAgentSpotlight": true
+}/*EDITMODE-END*/;
+
+const SWATCHES = [
+  { name:'Thunder teal', primary:'#10996b', accent:'#7af0b8', dim:'#0a6b4a' },
+  { name:'Electric violet', primary:'#7c5cff', accent:'#c4b5fd', dim:'#4c3bbd' },
+  { name:'Ember', primary:'#fa7b3f', accent:'#fcc69a', dim:'#c2521d' },
+  { name:'Azure', primary:'#3b82f6', accent:'#93c5fd', dim:'#1e40af' },
+];
+
+function applyTheme(t) {
+  const root = document.documentElement;
+  root.style.setProperty('--thunder-primary', t.primary);
+  root.style.setProperty('--thunder-accent', t.accent);
+  root.style.setProperty('--thunder-primary-dim', t.dim);
+  root.style.setProperty('--thunder-primary-soft', t.accent);
+  root.style.setProperty('--t-border-strong', t.accent + '2e');
+  root.style.setProperty('--thunder-glow', `0 0 48px ${t.primary}59`);
+  // recompute gradient body bg
+  document.body.style.background = `
+    radial-gradient(1200px 700px at 75% -10%, ${t.primary}38, transparent 60%),
+    radial-gradient(900px 560px at 10% 10%, ${t.accent}14, transparent 55%),
+    var(--t-bg)`;
+  document.body.style.backgroundAttachment = 'fixed';
+}
+
+const TweaksPanel = ({ open, tweaks, setTweaks }) => {
+  if (!open) return null;
+  const activeIdx = SWATCHES.findIndex(s => s.primary.toLowerCase() === (tweaks.primaryColor||'').toLowerCase());
+
+  const pick = (sw) => {
+    const next = { ...tweaks, primaryColor: sw.primary, accentColor: sw.accent };
+    setTweaks(next);
+    applyTheme(sw);
+    window.parent.postMessage({ type:'__edit_mode_set_keys', edits: { primaryColor: sw.primary, accentColor: sw.accent } }, '*');
+  };
+
+  const setKey = (k, v) => {
+    const next = { ...tweaks, [k]: v };
+    setTweaks(next);
+    window.parent.postMessage({ type:'__edit_mode_set_keys', edits: { [k]: v } }, '*');
+  };
+
+  return (
+    <div className="tweaks-panel open">
+      <h5>Tweaks</h5>
+      <div className="tweak-row">
+        <label>Accent color</label>
+        <div className="tweak-swatches">
+          {SWATCHES.map((s,i) => (
+            <div key={s.name}
+              className={`tweak-swatch ${i===activeIdx?'active':''}`}
+              style={{background: `linear-gradient(135deg, ${s.accent}, ${s.primary})`}}
+              title={s.name}
+              onClick={()=>pick(s)} />
+          ))}
+        </div>
+      </div>
+      <div className="tweak-row">
+        <label>Density</label>
+        <div className="tweak-seg">
+          <button className={tweaks.density==='comfy'?'active':''} onClick={()=>setKey('density','comfy')}>Comfortable</button>
+          <button className={tweaks.density==='dense'?'active':''} onClick={()=>setKey('density','dense')}>Dense</button>
+        </div>
+      </div>
+      <div className="tweak-row">
+        <label>Agent spotlight</label>
+        <div className="tweak-seg">
+          <button className={tweaks.showAgentSpotlight?'active':''} onClick={()=>setKey('showAgentSpotlight', true)}>Show</button>
+          <button className={!tweaks.showAgentSpotlight?'active':''} onClick={()=>setKey('showAgentSpotlight', false)}>Hide</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+function App() {
+  const [tweaks, setTweaks] = React.useState(TWEAKS);
+  const [panelOpen, setPanelOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    // apply initial theme from tweaks
+    const sw = SWATCHES.find(s => s.primary.toLowerCase() === (tweaks.primaryColor||'').toLowerCase())
+            || { primary: tweaks.primaryColor, accent: tweaks.accentColor, dim: tweaks.primaryColor };
+    applyTheme(sw);
+  }, []);
+
+  React.useEffect(() => {
+    // density
+    document.documentElement.style.setProperty('--fs-body1', tweaks.density==='dense'?'0.93rem':'1rem');
+    // sections padding
+    document.querySelectorAll('section').forEach(s => {
+      s.style.padding = tweaks.density==='dense' ? '64px 0' : '';
+    });
+  }, [tweaks.density]);
+
+  React.useEffect(() => {
+    // tweaks protocol
+    const onMsg = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setPanelOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setPanelOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type:'__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  return (
+    <>
+      <Nav />
+      <Hero />
+      <InstallSection />
+      <FeaturesSection />
+      {tweaks.showAgentSpotlight && <AgentSpotlight />}
+      <SDKsSection />
+      <CTABand />
+      <Footer />
+      <TweaksPanel open={panelOpen} tweaks={tweaks} setTweaks={setTweaks} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
